@@ -52,7 +52,7 @@ app.get("/posts/:id", async (req, res) => {
     const id = parseInt(req.params.id);
     //what to do with params?
     //check if there is an id
-    if (!id) {
+    if (isNaN(id)) {
       return res.status(404).json({ error: `Post ${id} not found` });
     }
     //read the post from readPost function
@@ -70,8 +70,11 @@ app.put("/posts/:id", async (req, res) => {
     const modifiedId = parseInt(req.params.id);
     //grab title and content from JSON
     const { title, content } = req.body;
+    if (isNaN(modifiedId)) {
+      return res.status(400).json({ error: "Invalid post ID" });
+    }
     //check if title and content are present
-    if (!title && !content) {
+    if ((!title || title === "") && (!content || content === "")) {
       return res
         .status(400)
         .json({ error: "Either title or content must be provided" });
@@ -82,10 +85,8 @@ app.put("/posts/:id", async (req, res) => {
     if (!response) {
       return res.status(404).json({ error: `Post ${modifiedId} not found` });
     }
-    //read the post and grab the id
-    const updated = await readPost(modifiedId);
     //display message from readPost function
-    res.status(200).json(updated);
+    res.status(200).json({ message: `Post ${modifiedId} updated` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

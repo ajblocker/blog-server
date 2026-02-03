@@ -108,12 +108,12 @@ export async function updatePost(id, newTitle, newContent) {
     if (!post) {
       return false;
     }
-    //update the title
-    if (newTitle !== undefined) {
+    //update the title if present and not empty
+    if (newTitle !== undefined && newTitle != "") {
       post.title = newTitle;
     }
-    //update the content
-    if (newContent !== undefined) {
+    //update the content if not empty and present
+    if (newContent !== undefined && newContent != "") {
       post.content = newContent;
     }
     //write to file and bring in string from JSON file
