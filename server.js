@@ -1,6 +1,6 @@
 import express from "express";
 import { fileURLToPath } from "url";
-import { createPost, readPost, resetPosts } from "./blogService.js";
+import { createPost, readPost, resetPosts, updatePost } from "./blogService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -51,6 +51,26 @@ app.get("/posts/:id", async (req, res) => {
   }
 });
 // PUT /posts/:id     → Update a post by ID
+app.put("posts/:id", async (req, res) => {
+  try {
+    const modifiedId = parseInt(req.params.id);
+    const { id, newTitle, newContent } = req.body;
+    if (
+      (!newTitle || newTitle === "") &&
+      (!newContent || newContent === "") &&
+      !modifiedId
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Either content or title must be provided" });
+    } else {
+      const response = await updatePost(id, newTitle, newContent);
+      res.status(200).json({ message: response });
+    }
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
 // DELETE /posts/:id  → Delete a post by ID
 // GET /posts         → List all posts
 
