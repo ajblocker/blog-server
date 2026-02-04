@@ -53,16 +53,21 @@ app.get("/posts/:id", async (req, res) => {
     //what to do with params?
     //check if there is an id
     if (isNaN(id)) {
-      return res.status(404).json({ error: `Post ${id} not found` });
+      return res.status(400).json({ error: "Invalid post ID" });
     }
     //read the post from readPost function
-    const response = await readPost(id);
+    const post = await readPost(id);
+    //check if post not found, return 404
+    if (!post) {
+      return res.status(404).json({ error: `Post ${id} not found` });
+    }
     //displays message from readPost function
-    res.status(200).json({ message: response });
+    return res.status(200).json(post);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
+
 // PUT /posts/:id     → Update a post by ID
 app.put("/posts/:id", async (req, res) => {
   try {

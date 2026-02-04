@@ -78,8 +78,8 @@ export async function readPost(id) {
       //compare postId
       return post.id === id;
     });
-    //if found true, send posts, if not send message back
-    return findPost ? findPost : "Post not found";
+    //if found true, send posts, if not return undefined
+    return findPost ? findPost : undefined;
   } catch (error) {
     console.log(`An error occurred logging ${error}`);
     return undefined;
